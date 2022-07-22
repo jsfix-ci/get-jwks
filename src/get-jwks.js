@@ -36,13 +36,13 @@ function buildGetJwks(options = {}) {
   })
 
   async function getJwksUri(normalizedDomain) {
-    const response = await fetch(
-      `${normalizedDomain}.well-known/openid-configuration`,
-      {
-        agent,
-        timeout: 5000,
-      }
-    )
+    const response = await /* TODO: JSFIX could not patch the breaking change:
+    The timeout option was removed
+    Suggested fix: Use timeout-signal as a workaround: https://github.com/node-fetch/node-fetch/blob/main/docs/v3-UPGRADE-GUIDE.md#the-timeout-option-was-removed*/
+    fetch(`${normalizedDomain}.well-known/openid-configuration`, {
+      agent,
+      timeout: 5000,
+    })
     const body = await response.json()
 
     if (!response.ok) {
@@ -105,7 +105,10 @@ function buildGetJwks(options = {}) {
       ? await getJwksUri(normalizedDomain)
       : `${normalizedDomain}.well-known/jwks.json`
 
-    const response = await fetch(jwksUri, { agent, timeout: 5000 })
+    const response = await /* TODO: JSFIX could not patch the breaking change:
+    The timeout option was removed
+    Suggested fix: Use timeout-signal as a workaround: https://github.com/node-fetch/node-fetch/blob/main/docs/v3-UPGRADE-GUIDE.md#the-timeout-option-was-removed*/
+    fetch(jwksUri, { agent, timeout: 5000 })
     const body = await response.json()
 
     if (!response.ok) {
